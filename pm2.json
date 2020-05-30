@@ -1,10 +1,10 @@
 {
   "apps": [
     {
-      "name": "bepal-middleware",
+      "name": "前后端中间件",
       "script": "index.js",
       "exec_mode": "cluster",
-      "instances": "4",
+      "instances": "2",
       "watch": true,
       "instance_var": "INSTANCE_ID",
       "ignore_watch": [
