@@ -113,6 +113,6 @@ const dealUrl = path => {
 }
 
 // 全局的基本地址，用于区别本地环境还是线上环境
-const address = 'http://192.168.0.253'
+const address = process.env.NODE_ENV === 'production'?'http://127.0.0.1':'http://192.168.0.253'
 
 module.exports = { request, dealUrl, address, sendRequest, back2json }
