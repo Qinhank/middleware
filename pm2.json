@@ -1,5 +1,14 @@
 {
-  "env_production" : {
-    "NODE_ENV": "production"
-  }
+  "apps" : [{
+    "name": "bepal-middleware",
+    "cwd": "dest",
+    "script"    : "index.js",
+    "instances" : "2",
+    "exec_mode" : "cluster",
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "log_date_format": "YYYY-MM-DD_HH:mm Z",
+    "merge_logs": true
+  }]
 }
