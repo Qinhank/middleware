@@ -80,11 +80,12 @@ const sendRequest = (url, method, data={}, opt={}) => {
             if(unlogin) {
               res({ unlogin: true, msg: '当前未登录，请先登录' })
             } else {
+              console.log(r.data)
               if(meta && meta.success) {
                 res(back2json({ success: true, msg: '请求数据成功', data, code: 200 }))
               } else {
                 // 但凡业务类型或后端返回成功但实际业务未成功的，统一返回60开头的状态码
-                res(back2json({ success: false, msg: meta.message, code: 601 }))
+                res(back2json({ success: false, msg: meta && meta.message?meta.message:'返回的数据有误', code: 601 }))
               }
             }
           }
