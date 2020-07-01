@@ -4,6 +4,11 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
 const app = new express()
 const { back2json, dealUrl, sendRequest, address } = require('./core')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+const FormData = require('form-data')
+const fs = require('fs')
+const path = require('path')
 
 // 开启跨域
 app.use(cors())
@@ -37,21 +42,35 @@ const deal = async (req, res) => {
       } = require(`./routes/${name}`)
       const customs = customized.map(_ => _.url)
       // 如果是定制路由，则全部交由路由自己处理，否则则使用统一处理函数
-      if(customs.indexOf(dealUrl(req.url)) > -1) {
-        const item = customized[customs.indexOf(dealUrl(req.url))]
-        if(req.method==item.method) {
-          return item.cb(req, res)
+      let url = req._parsedUrl.pathname
+      if(customs.indexOf(dealUrl(url)) > -1) {
+        const item = customized[customs.indexOf(dealUrl(url))]
+        if(req.method == item.method) {
+          return item.cb(req, res, token)
         } else {
           return back2json({ success: false, msg: '当前接口不存在或已删除', code: 404 })
         }
       } else {
         const url = `${addressConfig?addressConfig:address}:${port}/${dealUrl(req.url)}`
-        const result = await sendRequest(url, req.method, req.body, {
+        const isFile = req.headers['content-type'] && req.headers['content-type'].indexOf('multipart') > -1
+        var formData = new FormData()
+        if (req.files && req.files.length) {
+          req.files.map(_ => {
+            formData.append('file', fs.readFileSync(path.join(`./uploads/${_.filename}`)), {
+              filename: _.originalname,
+              contentType: _.mimetype,
+            })
+          })
+        }
+        const body = isFile ? formData: req.body
+        const result = await sendRequest(url, req.method, body, {
           customMethod,
           headers: {
             [token]: req.headers[token]||'',
-            'content-type': 'application/json'
-          }
+            'content-type': req.headers['content-type'] || 'application/json',
+            ...isFile ? formData.getHeaders() : {}
+          },
+          processData: false
         })
         return result
       }
@@ -76,7 +95,7 @@ proxys.map(_ => {
   }))
 })
 
-app.use(async (ctx, res, next) => {
+app.use(upload.any(), async (ctx, res, next) => {
   const urlArr = ctx.url.split('/')
   if(ctx.url!=='/' && urlArr && urlArr.length) {
     const key = urlArr[2]

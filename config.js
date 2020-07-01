@@ -24,6 +24,12 @@ module.exports = [
     hasFile: true
   },
   {
+    // apk
+    name: 'android',
+    proxy: null,
+    hasFile: true
+  },
+  {
     name: 'weixin',
     proxy: 'https://api.weixin.qq.com',
     hasFile: false

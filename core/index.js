@@ -37,22 +37,16 @@ const dealErrorData = (param={}) => {
   switch(status) {
     case 400:
       return back2json({ success: false, msg: '当前请求发生错误', code: 400 })
-      break
     case 401:
       return back2json({ success: false, msg: '当前请求未授权', code: 401 })
-      break
     case 404:
       return back2json({ success: false, msg: '当前接口不存在或已删除', code: 404 })
-      break
     case 413:
       return back2json({ success: false, msg: '当前请求实体过大', code: 413 })
-      break
     case 500:
       return back2json({ success: false, msg: '服务器发生内部错误', code: 500 })
-      break
     case 503:
       return back2json({ success: false, msg: '当前服务不可用', code: 503 })
-      break
     default:
       return back2json({ success: false, msg: '当前请求发生错误', code: 400 })
   }
@@ -80,7 +74,6 @@ const sendRequest = (url, method, data={}, opt={}) => {
             if(unlogin) {
               res({ unlogin: true, msg: '当前未登录，请先登录' })
             } else {
-              console.log(r.data)
               if(meta && meta.success) {
                 res(back2json({ success: true, msg: '请求数据成功', data, code: 200 }))
               } else {
