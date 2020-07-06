@@ -21,7 +21,7 @@ module.exports = {
         let obj = {}
         if ( apks && apkArr && apkArr.length) {
           const data = await Promise.all(apkArr.map(_ => {
-            return sendRequest( address + '/api/v1.0/androidVersion/getVersionByApk', 'GET', {}, {
+            return sendRequest( `${address}:84` + '/api/v1.0/androidVersion/getVersionByApk', 'GET', {}, {
               params: {
                 apk: _
               },
@@ -31,6 +31,7 @@ module.exports = {
               }
             })
           }))
+          console.log(data)
           if ( data && data.length ) {
             data.map(( _, i ) => {
               obj[apkArr[i]] = _.data
