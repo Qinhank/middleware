@@ -31,7 +31,6 @@ module.exports = {
               }
             })
           }))
-          console.log(data)
           if ( data && data.length ) {
             data.map(( _, i ) => {
               obj[apkArr[i]] = _.data

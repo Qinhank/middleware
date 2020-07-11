@@ -61,6 +61,8 @@ const sendRequest = (url, method, data={}, opt={}) => {
         url,
         method,
         data,
+        maxContentLength: 100000000,
+        maxBodyLength: 1000000000,
         ...opt
       })
       .then(r => {
@@ -87,6 +89,7 @@ const sendRequest = (url, method, data={}, opt={}) => {
         }
       })
       .catch(r => {
+        console.log(r)
         res(dealErrorData(r))
       })
     } catch (err) {
@@ -108,5 +111,6 @@ const dealUrl = path => {
 
 // 全局的基本地址，用于区别本地环境还是线上环境
 const address = process.env.NODE_ENV === 'production'?'http://127.0.0.1':'http://192.168.0.253'
+// const address = 'http://39.99.217.131'
 
 module.exports = { request, dealUrl, address, sendRequest, back2json }
